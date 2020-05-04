@@ -7,6 +7,7 @@ import com.cptneemoo.linkgenerator.repository.RequestResultRepository;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ public class WebService {
 
   private final RequestResultRepository requestResultRepository;
 
+  @Autowired
   public WebService(RequestResultRepository requestResultRepository) {
     this.requestResultRepository = requestResultRepository;
   }
