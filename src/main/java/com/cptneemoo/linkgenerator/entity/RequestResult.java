@@ -1,18 +1,14 @@
 package com.cptneemoo.linkgenerator.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.time.Instant;
 
 @Data
-@Entity
-public class RequestResult {
+public class RequestResult{
 
   @Id
-  @GeneratedValue
   private long id;
 
   private String urlBefore;
