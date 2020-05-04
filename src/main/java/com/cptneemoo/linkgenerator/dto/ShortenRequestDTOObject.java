@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ShortenRequestDTOObject {
 
   @JsonProperty("long_url")
-  private String urlBefore;
+  private String long_url;
 
-  public ShortenRequestDTOObject(String longUrl) {
-    this.urlBefore = longUrl;
+  public ShortenRequestDTOObject(String long_url) {
+    this.long_url = long_url;
   }
 }

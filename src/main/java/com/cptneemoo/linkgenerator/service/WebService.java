@@ -2,7 +2,6 @@ package com.cptneemoo.linkgenerator.service;
 
 import com.cptneemoo.linkgenerator.dto.ExpandRequestDTOObject;
 import com.cptneemoo.linkgenerator.entity.RequestResult;
-import com.cptneemoo.linkgenerator.dto.ShortenRequestDTOObject;
 import com.cptneemoo.linkgenerator.repository.RequestResultRepository;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
@@ -20,31 +19,40 @@ public class WebService {
 
   public RequestResult sendExpandRequest(String url) {
     String requestUrl = "https://api-ssl.bitly.com/v4/expand";
+    url = trimUrl(url);
     HttpResponse<JsonNode> jsonNode = Unirest.post(requestUrl)
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer 7e78549e86fad3e310e89dc21124a2b9c166c96a")
             .body(new ExpandRequestDTOObject(url))
             .asJson();
-    System.out.println(jsonNode.getBody().toPrettyString());
     String longUrl = jsonNode.getBody().getObject().getString("long_url");
-    System.out.println();
     RequestResult result = new RequestResult(url, longUrl);
     return requestResultRepository.save(result);
   }
 
   public RequestResult sendShortenRequest(String url) {
     String requestUrl = "https://api-ssl.bitly.com/v4/shorten";
-    String longUrl = Unirest.post(requestUrl)
+    url = trimUrl(url);
+    String body = "{\"long_url\": \"https://" + url + "\"}";
+    HttpResponse<JsonNode> jsonNode = Unirest.post(requestUrl)
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer 7e78549e86fad3e310e89dc21124a2b9c166c96a")
-            .body(new ShortenRequestDTOObject(url))
-            .asJson()
-            .getBody()
-            .getObject()
-            .get("link")
-            .toString();
+            //.body(new ShortenRequestDTOObject(url))
+            .body(body)
+            .asJson();
+    String longUrl = jsonNode.getBody().getObject().getString("id");
     RequestResult result = new RequestResult(url, longUrl);
     return requestResultRepository.save(result);
+  }
+
+  private String trimUrl(String url){
+    if (url.startsWith("http://")){
+      url = url.substring(7);
+    }
+    if (url.startsWith("https://")){
+      url = url.substring(8);
+    }
+    return url;
   }
 
 }
