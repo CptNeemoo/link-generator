@@ -24,7 +24,7 @@ public class WebController {
   }
 
   @GetMapping("/shorten")
-  public ShortenResponseDTOObject getUrlForShorten(@RequestParam(name="url") String url) {
+  public ShortenResponseDTOObject getUrlForShortening(@RequestParam(name="url") String url) {
     RequestResult requestResult = webService.sendShortenRequest(url);
     return new ShortenResponseDTOObject(requestResult.getUrlAfter());
   }

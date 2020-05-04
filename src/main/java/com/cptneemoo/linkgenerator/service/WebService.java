@@ -1,6 +1,7 @@
 package com.cptneemoo.linkgenerator.service;
 
 import com.cptneemoo.linkgenerator.dto.ExpandRequestDTOObject;
+import com.cptneemoo.linkgenerator.dto.ShortenRequestDTOObject;
 import com.cptneemoo.linkgenerator.entity.RequestResult;
 import com.cptneemoo.linkgenerator.repository.RequestResultRepository;
 import kong.unirest.HttpResponse;
@@ -32,13 +33,11 @@ public class WebService {
 
   public RequestResult sendShortenRequest(String url) {
     String requestUrl = "https://api-ssl.bitly.com/v4/shorten";
-    url = trimUrl(url);
-    String body = "{\"long_url\": \"https://" + url + "\"}";
+    url = "https://" + trimUrl(url);
     HttpResponse<JsonNode> jsonNode = Unirest.post(requestUrl)
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer 7e78549e86fad3e310e89dc21124a2b9c166c96a")
-            //.body(new ShortenRequestDTOObject(url))
-            .body(body)
+            .body(new ShortenRequestDTOObject(url))
             .asJson();
     String longUrl = jsonNode.getBody().getObject().getString("id");
     RequestResult result = new RequestResult(url, longUrl);
