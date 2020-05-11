@@ -8,10 +8,14 @@ import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WebService {
+
+  @Value("${LINK_AUTH_DETAILS}")
+  private String authDetails;
 
   private final RequestResultRepository requestResultRepository;
 
@@ -25,7 +29,7 @@ public class WebService {
     url = trimUrl(url);
     HttpResponse<JsonNode> jsonNode = Unirest.post(requestUrl)
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer 7e78549e86fad3e310e89dc21124a2b9c166c96a")
+            .header("Authorization", authDetails)
             .body(new ExpandRequestDTOObject(url))
             .asJson();
     String longUrl = jsonNode.getBody().getObject().getString("long_url");
@@ -38,7 +42,7 @@ public class WebService {
     url = "https://" + trimUrl(url);
     HttpResponse<JsonNode> jsonNode = Unirest.post(requestUrl)
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer 7e78549e86fad3e310e89dc21124a2b9c166c96a")
+            .header("Authorization", authDetails)
             .body(new ShortenRequestDTOObject(url))
             .asJson();
     String longUrl = jsonNode.getBody().getObject().getString("id");
